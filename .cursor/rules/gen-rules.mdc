@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+### Core Philosophy
+This is a clean, cross-platform app for Gennessence Water — health-focused, calm design, mobile-first. The project should always be built with maximum stability and clarity in mind.
+
+### Cross-Platform Rule (Mandatory)
+- Must work on:
+  - ✅ Web
+  - ✅ Android (Play Store)
+  - ✅ iOS (App Store)
+- Uses **Capacitor** for native builds
+- No Expo — ever
+- Built using **Yarn** (not npm)
+
+### CLI Environment
+- All commands must be compatible with **Windows Powershell**
+- Never use `&&` in terminal commands
+- Use `;` or newline-separated commands instead
+
+### Stack
+- Vite (React template)
+- Tailwind CSS for styling
+- React Router for navigation
+- Zustand or React Context for state
+- Yarn for all dependency management
+- Capacitor for mobile deployment
+
+### UI/UX Design
+- Water-themed palette and components
+- Reusable, responsive, clean layouts
+- Brand colors based on pH values (7.0 to 11.5)
+

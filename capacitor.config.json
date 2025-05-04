@@ -1,0 +1,19 @@
+{
+  "appId": "com.gennessence.water",
+  "appName": "Gennessence Water",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "buildOptions": {
+      "keystorePath": null,
+      "keystoreAlias": null,
+      "keystorePassword": null,
+      "keystoreKeyPassword": null,
+      "keystoreKeyAlias": null,
+      "keystoreKeyAliasPassword": null
+    }
+  }
+}
