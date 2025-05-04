@@ -1,54 +1,117 @@
-# React + TypeScript + Vite
+# Gennessence Water App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A luxury, cross-platform hydration and premium water brand experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Project Vision
+Gennessence Water is a modern, luxury hydration companion for discerning users. Track your daily water plan, discover the benefits of premium pH-balanced waters, and shop with confidence—all in a pixel-perfect, mobile-first app designed for web, Android, and iOS.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Features
+- **Personalized Hydration Plan:**
+  - 8-step daily schedule, dynamic and interactive
+  - Progress tracking, streaks, and missed glass reminders
+- **Luxury Product Benefits:**
+  - Beautiful, color-coded cards for each water type (by pH)
+  - 5+ benefits per product, with luxury/lifestyle focus
+- **Modern Cart & Checkout:**
+  - Add products, view cart, and prepare for seamless checkout
+- **Dynamic Daily Tips:**
+  - Rotating hydration tips, quotes, and streak encouragement
+- **FAQ & Guidance:**
+  - Expert hydration advice, meal/medication alignment, and more
+- **Buy Grid:**
+  - Quick access to all water types for purchase
+- **Responsive, Cross-Platform:**
+  - Works on web, Android, and iOS (via Capacitor)
+  - Consistent, luxury UI/UX everywhere
+- **Payfast-Ready:**
+  - Architecture prepared for secure Payfast payment integration
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🛠️ Tech Stack
+- **React** (with Vite for fast builds)
+- **styled-components** (luxury, maintainable styling)
+- **React Router** (SPA navigation)
+- **Capacitor** (native Android/iOS builds, device APIs)
+- **Yarn** (dependency management)
+- **No Expo, No Tailwind** (per project requirements)
+
+---
+
+## ⚡ Getting Started
+
+### 1. Clone the Repo
+```bash
+git clone https://github.com/yourusername/gennessence-app.git
+cd gennessence-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 2. Install Dependencies
+```bash
+yarn install
 ```
+
+### 3. Run the App (Web)
+```bash
+yarn dev
+```
+
+### 4. Build for Production
+```bash
+yarn build
+```
+
+### 5. Run on Android/iOS (via Capacitor)
+```bash
+yarn build
+npx cap sync
+npx cap open android   # or npx cap open ios
+```
+
+---
+
+## 📱 Deployment
+- **Web:** Deploy the `dist/` folder to Vercel, Netlify, or your preferred host.
+- **Android/iOS:** Use Capacitor to build and deploy to Google Play and App Store. See [Capacitor docs](https://capacitorjs.com/docs) for details.
+
+---
+
+## 💳 Payfast Integration (South Africa)
+- **Status:** Placeholder (integration-ready)
+- **Next Steps:**
+  1. Register for a Payfast merchant account
+  2. Obtain sandbox credentials
+  3. Implement secure payment form and server-side verification
+  4. Use [Payfast docs](https://developers.payfast.co.za/docs#introduction) for REST API or redirect integration
+  5. Test in sandbox, then switch to production keys
+- **Security:** Never expose secret keys in the frontend. Use a secure backend for payment verification.
+- **Note:** The app is architected for easy Payfast integration—see `/src/services/payfast.ts` (to be created) for scaffolding.
+
+---
+
+## 🤝 Contributing
+Pull requests are welcome! Please:
+- Fork the repo
+- Create a feature branch
+- Follow code style and cross-platform guidelines
+- Submit a clear PR description
+
+---
+
+## 📄 License
+[MIT](LICENSE) (or your preferred license)
+
+---
+
+## 📬 Contact
+- **Brand:** Gennessence Water
+- **Email:** [your@email.com](mailto:your@email.com)
+- **Instagram:** [@gennessencewater](https://instagram.com/gennessencewater)
+
+---
+
+> Designed for a new era of hydration. Luxury, science, and wellness—every sip, every day.

@@ -6,6 +6,7 @@ import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import Dashboard from './pages/Dashboard';
 import { AuthProvider } from './context/AuthContext';
+import Footer from './components/Footer';
 import './App.css'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
+        <Footer />
       </Router>
     </AuthProvider>
   );

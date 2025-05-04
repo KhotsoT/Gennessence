@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: payfast-backend
+    env: node
+    plan: free
+    buildCommand: yarn build
+    startCommand: yarn start
+    envVars:
+      - key: PAYFAST_MERCHANT_ID
+        sync: false
+      - key: PAYFAST_MERCHANT_KEY
+        sync: false
+      - key: PAYFAST_PASSPHRASE
+        sync: false
+      - key: PORT
+        sync: false 

@@ -83,6 +83,9 @@ const GuideGrid = styled.div`
   width: 100%;
   max-width: 900px;
   margin-bottom: 2.5rem;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const GlassCard = styled.div<{ color: string; checked: boolean }>`
@@ -252,8 +255,17 @@ const Quote = styled.div`
   margin: 1.5rem 0 0.5rem 0;
   text-align: center;
 `;
-const quotes = [
-  'Sip, Smile, Repeat.'
+const dailyTips = [
+  'Sip, Smile, Repeat.',
+  'Hydration is the foundation of luxury living.',
+  'A glass of water is a glass of wellness.',
+  'Start your day with Pure Water for gentle hydration.',
+  'Balance your body, balance your mind.',
+  'Every sip is a step toward your best self.',
+  'Alkaline water, elevated life.',
+  'Hydrate for clarity, energy, and beauty.',
+  'Your body is 70% water—make it premium.',
+  'Luxury is feeling your best, every day.'
 ];
 
 // Add helper to get full plan for any day (no date param needed)
@@ -288,7 +300,11 @@ export default function Dashboard() {
   const [streak, setStreak] = useState(() => {
     return Number(localStorage.getItem('hydrationStreak') || 0);
   });
-  const quote = quotes[0];
+  // Dynamic daily tip/quote
+  const today = new Date();
+  const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
+  const tipIdx = dayOfYear % dailyTips.length;
+  const quote = streak > 1 ? `Hydration streak: ${streak} days! Keep it up!` : dailyTips[tipIdx];
   const [showPlan, setShowPlan] = useState(false);
 
   useEffect(() => {
