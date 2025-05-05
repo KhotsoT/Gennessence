@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 const navItems = [
   { name: 'Home', href: '/' },
-  { name: 'Benefits', href: '/benefits' },
+  { name: 'Our Waters', href: '/our-waters' },
   { name: 'Cart', href: '/cart' },
 ];
 
@@ -240,11 +240,7 @@ export default function Navbar() {
         <NavLinks>
           {navItems.map((item) => (
             <NavLink key={item.name}>
-              {item.name === 'Benefits' ? (
-                <NavAnchor as={Link} to="/benefits" onClick={(e) => handleLinkClick(e, '/benefits')}>{item.name}</NavAnchor>
-              ) : (
-                <NavAnchor href={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
-              )}
+              <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
             </NavLink>
           ))}
           {user ? (
@@ -273,11 +269,7 @@ export default function Navbar() {
       <MobileMenu open={mobileOpen}>
         {navItems.map((item, idx) => (
           <li key={item.name} style={{ marginBottom: idx === navItems.length - 1 ? 0 : '1.5rem' }}>
-            {item.name === 'Benefits' ? (
-              <NavAnchor as={Link} to="/benefits" onClick={(e) => handleLinkClick(e, '/benefits')}>{item.name}</NavAnchor>
-            ) : (
-              <NavAnchor href={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
-            )}
+            <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
           </li>
         ))}
         {user ? (

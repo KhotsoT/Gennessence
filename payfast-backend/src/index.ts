@@ -1,18 +1,37 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import { generatePayfastSignature } from './utils/payfast';
+import multer from 'multer';
+import { parse } from 'csv-parse/sync';
+import authRoutes from './routes/auth';
+import usersRoutes from './routes/users';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/gennessence')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+
+// Multer setup for file uploads
+const upload = multer({ storage: multer.memoryStorage() });
+
 // Health check
 app.get('/', (_req: Request, res: Response) => {
-  res.send('Payfast backend is running.');
+  res.send('Gennessence backend is running.');
 });
 
 // Create Payfast payment URL (redirect method)
@@ -39,6 +58,26 @@ app.post('/api/payfast/create-payment', (req: Request, res: Response) => {
   res.json({ url: payfastUrl });
 });
 
+// Product catalog upload endpoint
+app.post('/api/products/upload', upload.single('file'), (req: Request & { file?: Express.Multer.File }, res: Response) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+  try {
+    const csv = req.file.buffer.toString('utf-8');
+    const records = parse(csv, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+    // TODO: Save records to database in production
+    console.log('Parsed products:', records);
+    res.json({ products: records });
+  } catch (err) {
+    res.status(400).json({ error: 'Invalid CSV file.' });
+  }
+});
+
 // Payfast notify handler (stub)
 app.post('/api/payfast/notify', (req: Request, res: Response) => {
   // In production: validate signature, source IP, update order/payment status
@@ -48,5 +87,5 @@ app.post('/api/payfast/notify', (req: Request, res: Response) => {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Payfast backend listening on port ${PORT}`);
+  console.log(`Gennessence backend listening on port ${PORT}`);
 }); 

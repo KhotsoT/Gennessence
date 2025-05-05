@@ -30,6 +30,35 @@ Gennessence Water is a modern, luxury hydration companion for discerning users. 
 - **Payfast-Ready:**
   - Architecture prepared for secure Payfast payment integration
 
+## 👑 Admin Features
+- **Secure Admin Portal:**
+  - JWT-based authentication
+  - Role-based access control
+  - Luxury, responsive admin dashboard
+- **Product Management:**
+  - CRUD operations for all water products
+  - Bulk upload via CSV
+  - Image management
+  - Real-time inventory tracking
+- **Order Management:**
+  - View and manage all orders
+  - Status updates (pending, paid, shipped, delivered)
+  - Order details and history
+  - Export order data
+- **User Management:**
+  - View and manage user accounts
+  - Role management
+  - User activity tracking
+- **Analytics Dashboard:**
+  - Sales metrics and trends
+  - Product performance
+  - User growth and engagement
+  - Custom date range reports
+- **System Settings:**
+  - Environment configuration
+  - Payment gateway settings
+  - System logs and monitoring
+
 ---
 
 ## 🛠️ Tech Stack

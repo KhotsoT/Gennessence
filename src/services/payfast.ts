@@ -44,7 +44,7 @@ export function createPayfastRedirectUrl({
  * Handle Payfast payment notification (to be implemented on backend)
  * @param data - Payfast notify POST data
  */
-export function handlePayfastNotify(data: any) {
+export function handlePayfastNotify(_data: any) {
   // TODO: Implement on a secure backend (Node, Python, etc.)
   // 1. Validate signature
   // 2. Validate source IP

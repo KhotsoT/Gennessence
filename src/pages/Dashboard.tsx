@@ -69,8 +69,8 @@ const ProgressBar = styled.div`
   margin: 1.2rem 0 2.2rem 0;
   overflow: hidden;
 `;
-const Progress = styled.div<{ percent: number; color: string }>`
-  width: ${({ percent }) => percent}%;
+const Progress = styled.div<{ $percent: number; color: string }>`
+  width: ${({ $percent }) => $percent}%;
   background: ${({ color }) => color};
   height: 100%;
   transition: width 0.4s;
@@ -397,7 +397,7 @@ export default function Dashboard() {
       )}
       <GuideLabel style={{ marginTop: '1.5rem' }}>Your 8-Step Sip</GuideLabel>
       <ProgressBar>
-        <Progress percent={percent} color={completed === 8 ? '#22c55e' : '#3074db'} />
+        <Progress $percent={percent} color={completed === 8 ? '#22c55e' : '#3074db'} />
       </ProgressBar>
       <div style={{ marginBottom: '2.2rem', color: '#2563eb', fontWeight: 500, fontSize: '1.1rem' }}>{completed}/8 glasses today</div>
       {/* Missed Section */}
