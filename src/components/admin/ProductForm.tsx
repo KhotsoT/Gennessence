@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useAdminAuth } from '../../contexts/AdminAuthContext';
 
 const Form = styled.form`
   background: white;
@@ -191,7 +190,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess, onCancel 
   const [benefits, setBenefits] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { token } = useAdminAuth();
 
   useEffect(() => {
     if (product) {
@@ -242,13 +240,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess, onCancel 
       };
 
       if (product) {
-        await axios.put(`/api/products/${product._id}`, data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.put(`/api/products/${product._id}`, data);
       } else {
-        await axios.post('/api/products', data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post('/api/products', data);
       }
 
       onSuccess();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useAdminAuth } from '../../contexts/AdminAuthContext';
+// import { useAdminAuth } from '../../contexts/AdminAuthContext';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
@@ -98,7 +98,7 @@ const ProductStats = styled.div`
 `;
 
 const Analytics: React.FC = () => {
-  const { token } = useAdminAuth();
+  // const { token } = useAdminAuth();
   const [overview, setOverview] = useState<any>(null);
   const [statusBreakdown, setStatusBreakdown] = useState<any[]>([]);
   const [paymentBreakdown, setPaymentBreakdown] = useState<any[]>([]);
@@ -111,9 +111,9 @@ const Analytics: React.FC = () => {
       setLoading(true);
       try {
         const [overviewRes, trendRes, topRes] = await Promise.all([
-          axios.get('/api/orders/stats/overview', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('/api/orders/stats/revenue-trend', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('/api/orders/stats/top-products', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('/api/orders/stats/overview'),
+          axios.get('/api/orders/stats/revenue-trend'),
+          axios.get('/api/orders/stats/top-products'),
         ]);
         setOverview(overviewRes.data.overview);
         setStatusBreakdown(overviewRes.data.statusBreakdown);
@@ -127,7 +127,7 @@ const Analytics: React.FC = () => {
       }
     };
     fetchAnalytics();
-  }, [token]);
+  }, []);
 
   if (loading) return <div>Loading analytics...</div>;
 

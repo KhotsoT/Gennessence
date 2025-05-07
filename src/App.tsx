@@ -14,6 +14,8 @@ const OurWaters = lazy(() => import('./pages/OurWaters'));
 const Cart = lazy(() => import('./pages/Cart'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Privacy = lazy(() => import('./pages/Privacy'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const Checkout = lazy(() => import('./pages/Checkout'));
 // Admin pages
 const AdminLogin = lazy(() => import('./pages/admin/Login'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/Dashboard'));
@@ -60,9 +62,11 @@ const App: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/our-waters" element={<OurWaters />} />
+                      <Route path="/product/:name" element={<ProductDetail />} />
                       <Route path="/cart" element={<Cart />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/checkout" element={<Checkout />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                     <Footer />

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from './AuthModal';
 import { useAuth } from '../context/AuthContext';
+import { useCartStore } from '../store/cartStore';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -121,7 +123,7 @@ const MobileMenu = styled.ul<{ open: boolean }>`
   background: #fff;
   box-shadow: 0 8px 32px 0 rgba(0,60,255,0.08);
   z-index: 150;
-  padding: 2rem 0 1rem 0;
+  padding: 1.5rem 0;
   gap: 1.5rem;
   align-items: center;
   list-style: none;
@@ -129,19 +131,29 @@ const MobileMenu = styled.ul<{ open: boolean }>`
   @media (min-width: 801px) {
     display: none;
   }
+  li {
+    width: 100%;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  a, button {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+  }
 `;
 
 const MobileMenuButton = styled(NavAnchor)`
   display: block;
-  width: 80%;
-  margin: 1.2rem auto 0 auto;
+  width: 100%;
   text-align: center;
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   font-weight: 600;
   background: #3074db;
   color: #fff;
   border-radius: 0.5rem;
-  padding: 0.6rem 0;
+  padding: 0.75rem 1rem;
   border: none;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
@@ -152,12 +164,13 @@ const MobileMenuButton = styled(NavAnchor)`
 `;
 
 const MobileMenuTextButton = styled.button`
+  width: 100%;
   background: none;
   border: none;
   color: #3074db;
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  padding: 0;
+  padding: 0.75rem 1rem;
   margin: 0;
   cursor: pointer;
   transition: color 0.2s, text-decoration 0.2s;
@@ -184,11 +197,34 @@ const Hamburger = styled.button`
   }
 `;
 
+const CartIconWrap = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const CartBadge = styled.span`
+  position: absolute;
+  top: -7px;
+  right: -10px;
+  background: #f2994a;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.13em 0.6em;
+  min-width: 1.2em;
+  text-align: center;
+  box-shadow: 0 2px 8px 0 #f2994a22;
+`;
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const cartItems = useCartStore((s) => s.items);
+  const cartQty = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -208,7 +244,16 @@ export default function Navbar() {
         <NavLinks>
           {navItems.map((item) => (
             <NavLink key={item.name}>
-              <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
+              {item.name === 'Cart' ? (
+                <CartIconWrap>
+                  <NavAnchor as={Link} to={item.href} aria-label="Cart">
+                    <FaShoppingCart size={22} style={{ verticalAlign: 'middle' }} />
+                  </NavAnchor>
+                  {cartQty > 0 && <CartBadge>{cartQty}</CartBadge>}
+                </CartIconWrap>
+              ) : (
+                <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
+              )}
             </NavLink>
           ))}
           {user ? (
@@ -232,9 +277,18 @@ export default function Navbar() {
         </HamburgerBox>
       </Hamburger>
       <MobileMenu open={mobileOpen}>
-        {navItems.map((item, idx) => (
-          <li key={item.name} style={{ marginBottom: idx === navItems.length - 1 ? 0 : '1.5rem' }}>
-            <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
+        {navItems.map((item) => (
+          <li key={item.name}>
+            {item.name === 'Cart' ? (
+              <CartIconWrap>
+                <NavAnchor as={Link} to={item.href} aria-label="Cart">
+                  <FaShoppingCart size={22} style={{ verticalAlign: 'middle' }} />
+                </NavAnchor>
+                {cartQty > 0 && <CartBadge>{cartQty}</CartBadge>}
+              </CartIconWrap>
+            ) : (
+              <NavAnchor as={Link} to={item.href} onClick={(e) => handleLinkClick(e, item.href)}>{item.name}</NavAnchor>
+            )}
           </li>
         ))}
         {user ? (
@@ -250,4 +304,4 @@ export default function Navbar() {
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </NavBarContainer>
   );
-}
+} 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useAdminAuth } from '../../contexts/AdminAuthContext';
 import OrderDetails from '../../components/admin/OrderDetails';
 
 const Container = styled.div`
@@ -234,7 +233,6 @@ const Orders: React.FC = () => {
     startDate: '',
     endDate: '',
   });
-  const { token } = useAdminAuth();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -245,9 +243,7 @@ const Orders: React.FC = () => {
         if (filters.startDate) params.append('startDate', filters.startDate);
         if (filters.endDate) params.append('endDate', filters.endDate);
 
-        const response = await axios.get(`/api/orders?${params.toString()}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(`/api/orders?${params.toString()}`);
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -257,7 +253,7 @@ const Orders: React.FC = () => {
     };
 
     fetchOrders();
-  }, [token, filters]);
+  }, [filters]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -266,11 +262,7 @@ const Orders: React.FC = () => {
 
   const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
     try {
-      await axios.patch(
-        `/api/orders/${orderId}/status`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.patch(`/api/orders/${orderId}/status`, { status: newStatus });
 
       setOrders(prev =>
         prev.map(order =>

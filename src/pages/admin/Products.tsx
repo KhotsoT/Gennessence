@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useAdminAuth } from '../../contexts/AdminAuthContext';
 
 const Container = styled.div`
   padding: 1rem;
@@ -146,14 +145,11 @@ const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const { token } = useAdminAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('/api/products', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get('/api/products');
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -163,7 +159,7 @@ const Products: React.FC = () => {
     };
 
     fetchProducts();
-  }, [token]);
+  }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -177,7 +173,6 @@ const Products: React.FC = () => {
   const handleExport = async () => {
     try {
       const response = await axios.get('/api/products/export/csv', {
-        headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob',
       });
 

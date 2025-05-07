@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useAdminAuth } from '../../contexts/AdminAuthContext';
 
 const Container = styled.div`
   padding: 1rem;
@@ -173,7 +172,6 @@ interface User {
 }
 
 const Users: React.FC = () => {
-  const { token } = useAdminAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -203,9 +201,7 @@ const Users: React.FC = () => {
       if (search) params.append('search', search);
       if (roleFilter) params.append('role', roleFilter);
       if (statusFilter) params.append('status', statusFilter);
-      const response = await axios.get(`/api/users?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(`/api/users?${params.toString()}`);
       setUsers(response.data.users);
       setTotal(response.data.total);
     } catch (error) {
@@ -247,9 +243,7 @@ const Users: React.FC = () => {
     setEditLoading(true);
     setEditError(null);
     try {
-      await axios.put(`/api/users/${selectedUser._id}`, editForm, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.put(`/api/users/${selectedUser._id}`, editForm);
       closeModal();
       fetchUsers();
     } catch (error: any) {

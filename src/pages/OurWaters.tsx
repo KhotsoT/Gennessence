@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { FaTint, FaSpa, FaWater } from 'react-icons/fa';
 import '@fontsource/montserrat/600.css';
+import { useNavigate } from 'react-router-dom';
+import pureWaterImg from '../assets/pure-water.jpg';
+import gentleBoostImg from '../assets/gentle-boost.jpg';
+import optimalBalanceImg from '../assets/optimal-balance.jpg';
+import detoxWaterImg from '../assets/detox-water.jpg';
 
 const healthGradient = 'linear-gradient(90deg, #3074db 0%, #2581c4 50%, #1b8ec2 100%)';
 const beautyGradient = 'linear-gradient(90deg, #e85a97 0%, #e0aaff 100%)';
@@ -21,14 +26,14 @@ const SectionHeader = styled.div`
   align-items: center;
   margin-bottom: 0.7rem;
 `;
-const SectionIcon = styled.div<{ gradient: string }>`
+const SectionIcon = styled.div<{ $gradient: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 0.5rem;
   svg {
     font-size: 2.7rem;
-    background: ${({ gradient }) => gradient};
+    background: ${({ $gradient }) => $gradient};
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -36,10 +41,10 @@ const SectionIcon = styled.div<{ gradient: string }>`
     filter: drop-shadow(0 2px 12px rgba(48,116,219,0.10));
   }
 `;
-const SectionTitle = styled.h2<{ gradient: string }>`
+const SectionTitle = styled.h2<{ $gradient: string }>`
   font-size: 2.1rem;
   font-weight: 800;
-  background: ${({ gradient }) => gradient};
+  background: ${({ $gradient }) => $gradient};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -59,9 +64,9 @@ const CardGridContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
-const CardGrid = styled.div<{ columns?: number }>`
+const CardGrid = styled.div<{ $columns?: number }>`
   display: grid;
-  grid-template-columns: ${({ columns }) => columns ? `repeat(${columns}, 1fr)` : 'repeat(auto-fit, minmax(270px, 1fr))'};
+  grid-template-columns: ${({ $columns }) => $columns ? `repeat(${$columns}, 1fr)` : 'repeat(auto-fit, minmax(270px, 1fr))'};
   gap: 2.2rem;
   place-items: center;
   max-width: 740px;
@@ -87,6 +92,7 @@ const Card = styled.div<{ color: string }>`
   position: relative;
   transition: box-shadow 0.18s, transform 0.18s;
   will-change: box-shadow, transform;
+  cursor: pointer;
   &:hover, &:focus {
     box-shadow: 0 12px 40px 0 ${({ color }) => color}33, 0 2px 12px 0 ${({ color }) => color}22;
     transform: translateY(-2px) scale(1.025);
@@ -159,6 +165,9 @@ const healthWaters = [
     name: 'Pure Water',
     ph: '7.0',
     color: '#3074db',
+    image: pureWaterImg,
+    price: 50,
+    badge: 'NEUTRAL',
     points: [
       'Perfect during or after meals',
       'Safe for all ages, every day',
@@ -166,11 +175,15 @@ const healthWaters = [
       'Maintains hydration without altering digestion',
       'Best times: with meals, between meals, before bed',
     ],
+    tagline: 'Clean Hydration for Anytime Use',
   },
   {
     name: 'Gentle Boost',
     ph: '8.5',
     color: '#2581c4',
+    image: gentleBoostImg,
+    price: 52,
+    badge: 'ALKALINE',
     points: [
       'Great between meals to neutralize acidity',
       'Supports light detox and energy levels',
@@ -178,11 +191,15 @@ const healthWaters = [
       'Best times: mid-morning, mid-afternoon, 1–2 hrs after meals',
       'Promotes daily balance and wellness',
     ],
+    tagline: 'Mild Alkalinity for Daily Balance',
   },
   {
     name: 'Optimal Balance',
     ph: '9.0',
     color: '#1b8ec2',
+    image: optimalBalanceImg,
+    price: 54,
+    badge: 'ALKALINE',
     points: [
       'Helps prepare the body before meals',
       'Supports internal pH balance',
@@ -190,11 +207,15 @@ const healthWaters = [
       'Best times: 30 mins before meals, early morning, late afternoon',
       'Promotes overall hydration',
     ],
+    tagline: 'Balanced Alkalinity for Daily Reset',
   },
   {
     name: 'Detox Water',
     ph: '9.5',
     color: '#1b8ec2',
+    image: detoxWaterImg,
+    price: 54,
+    badge: 'ALKALINE',
     points: [
       'Ideal on an empty stomach for detox',
       'Best used in the morning or evening',
@@ -202,6 +223,7 @@ const healthWaters = [
       'Best times: first thing in the morning, 1–2 hrs after meals, before bed',
       'Supports cleansing and recovery',
     ],
+    tagline: 'Deep Alkalinity for Cleansing & Recovery',
   },
 ];
 const beautyWaters = [
@@ -252,22 +274,41 @@ function getCardIcon(category: 'health' | 'beauty' | 'utility', color: string) {
 }
 
 export default function OurWaters() {
+  const navigate = useNavigate();
+
+  const handleCardClick = (water: any) => {
+    navigate(`/product/${water.name.toLowerCase().replace(/\s+/g, '-')}`, {
+      state: { water }
+    });
+  };
+
   return (
     <Page>
       <Section>
         <SectionHeader>
-          <SectionIcon gradient={healthGradient}>{getCardIcon('health', '#3074db')}</SectionIcon>
-          <SectionTitle gradient={healthGradient}>Health Water</SectionTitle>
+          <SectionIcon $gradient={healthGradient}>{getCardIcon('health', '#3074db')}</SectionIcon>
+          <SectionTitle $gradient={healthGradient}>Health Water</SectionTitle>
         </SectionHeader>
         <SectionDesc>Premium drinking water for daily hydration and wellness.</SectionDesc>
         <CardGridContainer>
-          <CardGrid columns={2}>
+          <CardGrid $columns={2}>
             {healthWaters.map(w => {
               const bestIdx = w.points.findIndex(pt => pt.toLowerCase().startsWith('best times:'));
               const points = bestIdx !== -1 ? w.points.slice(0, bestIdx).concat(w.points.slice(bestIdx + 1)) : w.points;
               const bestTime = bestIdx !== -1 ? w.points[bestIdx] : null;
               return (
-                <Card key={w.ph} color={w.color}>
+                <Card 
+                  key={w.ph} 
+                  color={w.color}
+                  onClick={() => handleCardClick(w)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleCardClick(w);
+                    }
+                  }}
+                >
                   <CardTitle color={w.color}>{w.name} <Ph color={w.color}>pH {w.ph}</Ph></CardTitle>
                   <Points>
                     {points.map((pt, i) => pt ? <Point key={i}>{pt}</Point> : null)}
@@ -287,8 +328,8 @@ export default function OurWaters() {
       </Section>
       <Section>
         <SectionHeader>
-          <SectionIcon gradient={beautyGradient}>{getCardIcon('beauty', '#e85a97')}</SectionIcon>
-          <SectionTitle gradient={beautyGradient}>Beauty Water</SectionTitle>
+          <SectionIcon $gradient={beautyGradient}>{getCardIcon('beauty', '#e85a97')}</SectionIcon>
+          <SectionTitle $gradient={beautyGradient}>Beauty Water</SectionTitle>
         </SectionHeader>
         <SectionDesc>For cosmetic use only—luxury for your skin and hair.</SectionDesc>
         <CardGridContainer>
@@ -318,8 +359,8 @@ export default function OurWaters() {
       </Section>
       <Section>
         <SectionHeader>
-          <SectionIcon gradient={utilityGradient}>{getCardIcon('utility', '#d81e43')}</SectionIcon>
-          <SectionTitle gradient={utilityGradient}>Utility Water</SectionTitle>
+          <SectionIcon $gradient={utilityGradient}>{getCardIcon('utility', '#d81e43')}</SectionIcon>
+          <SectionTitle $gradient={utilityGradient}>Utility Water</SectionTitle>
         </SectionHeader>
         <SectionDesc>Specialty waters for cleaning, plants, and more.</SectionDesc>
         <CardGridContainer>

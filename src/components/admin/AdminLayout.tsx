@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../contexts/AdminAuthContext';
-import logo64 from '../../assets/logo/logo-64x64.png';
-import logo128 from '../../assets/logo/logo-128x128.png';
 import logo520 from '../../assets/logo/logo-520x240.png';
 
 const Layout = styled.div`

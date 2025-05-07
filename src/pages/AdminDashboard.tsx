@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 
 const AdminDashboardContainer = styled.div`
   padding: 2rem;
@@ -58,7 +58,7 @@ const Button = styled.button`
 `;
 
 const AdminDashboard: React.FC = () => {
-  const { currentUser, assignAdminRole } = useAuth();
+  // const { currentUser, assignAdminRole } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
@@ -71,10 +71,10 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   const handleAssignAdmin = async () => {
-    if (currentUser) {
-      await assignAdminRole(currentUser.uid);
-      alert('Admin role assigned successfully!');
-    }
+    // if (currentUser) {
+    //   await assignAdminRole(currentUser.uid);
+    //   alert('Admin role assigned successfully!');
+    // }
   };
 
   return (
