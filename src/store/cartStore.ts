@@ -19,7 +19,7 @@ interface CartState {
   clearCart: () => void;
 }
 
-const cartStoreCreator: StateCreator<CartState> = (set, get) => ({
+const cartStoreCreator: StateCreator<CartState> = (set) => ({
   items: [],
   addToCart: (item: Omit<CartItem, 'qty'>, qty: number) => {
     set((state) => {

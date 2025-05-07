@@ -138,7 +138,7 @@ const Total = styled.div`
 `;
 
 export default function Cart() {
-  const { items, updateQty, removeFromCart, clearCart } = useCartStore();
+  const { items, updateQty, removeFromCart } = useCartStore();
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
   const navigate = useNavigate();
 
