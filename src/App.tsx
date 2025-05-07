@@ -16,7 +16,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 // Admin pages
 const AdminLogin = lazy(() => import('./pages/admin/Login'));
-const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/Dashboard'));
 // Placeholder admin pages (replace with actual pages if available)
 const AdminProducts = lazy(() => import('./pages/admin/Products'));
 const AdminOrders = lazy(() => import('./pages/admin/Orders'));
@@ -30,7 +30,28 @@ const App: React.FC = () => {
         <AdminAuthProvider>
           <Suspense fallback={<div style={{textAlign:'center',marginTop:'4rem',color:'#3074db',fontWeight:600,fontSize:'1.2rem'}}>Loading...</div>}>
             <Routes>
-              {/* Public/User Section */}
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute>
+                    <AdminLayout>
+                      <Routes>
+                        <Route path="dashboard" element={<AdminDashboardPage />} />
+                        <Route path="products" element={<AdminProducts />} />
+                        <Route path="orders" element={<AdminOrders />} />
+                        <Route path="users" element={<AdminUsers />} />
+                        <Route path="analytics" element={<AdminAnalytics />} />
+                        <Route path="settings" element={<div>Settings</div>} />
+                        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+                      </Routes>
+                    </AdminLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Public/User Routes */}
               <Route
                 path="/*"
                 element={
@@ -46,26 +67,6 @@ const App: React.FC = () => {
                     </Routes>
                     <Footer />
                   </>
-                }
-              />
-              {/* Admin Section */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin/*"
-                element={
-                  <ProtectedRoute>
-                    <AdminLayout>
-                      <Routes>
-                        <Route path="dashboard" element={<AdminDashboard />} />
-                        <Route path="products" element={<AdminProducts />} />
-                        <Route path="orders" element={<AdminOrders />} />
-                        <Route path="users" element={<AdminUsers />} />
-                        <Route path="analytics" element={<AdminAnalytics />} />
-                        <Route path="settings" element={<div>Settings</div>} />
-                        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
-                      </Routes>
-                    </AdminLayout>
-                  </ProtectedRoute>
                 }
               />
             </Routes>

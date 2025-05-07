@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAdminAuth } from '../../contexts/AdminAuthContext';
+import logo520 from '../../assets/logo/logo-520x240.png';
 
 const LoginContainer = styled.div`
   min-height: 100vh;
@@ -19,11 +20,16 @@ const LoginCard = styled.div`
   width: 100%;
   max-width: 400px;
   text-align: center;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Logo = styled.img`
-  width: 120px;
-  margin-bottom: 2rem;
+  width: 180px;
+  margin-bottom: 2.5rem;
+  display: block;
 `;
 
 const Title = styled.h1`
@@ -88,6 +94,7 @@ const AdminLogin: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { login } = useAdminAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +103,9 @@ const AdminLogin: React.FC = () => {
 
     try {
       await login(email, password);
-      navigate('/admin/dashboard');
+      // Redirect to the page they tried to visit or dashboard
+      const from = (location.state as any)?.from || '/admin/dashboard';
+      navigate(from, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -107,7 +116,7 @@ const AdminLogin: React.FC = () => {
   return (
     <LoginContainer>
       <LoginCard>
-        <Logo src="/logo.png" alt="Gennessence Water" />
+        <Logo src={logo520} alt="Gennessence Water" />
         <Title>Admin Portal</Title>
         <Form onSubmit={handleSubmit}>
           <Input

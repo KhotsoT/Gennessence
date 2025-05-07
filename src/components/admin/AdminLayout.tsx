@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../contexts/AdminAuthContext';
+import logo64 from '../../assets/logo/logo-64x64.png';
+import logo128 from '../../assets/logo/logo-128x128.png';
+import logo520 from '../../assets/logo/logo-520x240.png';
 
 const Layout = styled.div`
   min-height: 100vh;
@@ -9,7 +12,7 @@ const Layout = styled.div`
   background: #f8fafc;
 `;
 
-const Sidebar = styled.div<{ isOpen: boolean }>`
+const Sidebar = styled.div<{ $isOpen: boolean }>`
   width: 250px;
   background: white;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
@@ -19,7 +22,7 @@ const Sidebar = styled.div<{ isOpen: boolean }>`
   z-index: 1000;
 
   @media (max-width: 768px) {
-    transform: translateX(${props => props.isOpen ? '0' : '-100%'});
+    transform: translateX(${props => props.$isOpen ? '0' : '-100%'});
   }
 `;
 
@@ -57,22 +60,24 @@ const MenuButton = styled.button`
 `;
 
 const Logo = styled.img`
-  height: 40px;
+  width: 140px;
+  margin: 2.5rem auto 2rem auto;
+  display: block;
 `;
 
 const Nav = styled.nav`
   padding: 2rem 0;
 `;
 
-const NavItem = styled(Link)<{ active?: boolean }>`
+const NavItem = styled(Link)<{ $active?: boolean }>`
   display: flex;
   align-items: center;
   padding: 0.875rem 1.5rem;
-  color: ${props => props.active ? '#3074db' : '#64748b'};
+  color: ${props => props.$active ? '#3074db' : '#64748b'};
   text-decoration: none;
-  font-weight: ${props => props.active ? '500' : '400'};
+  font-weight: ${props => props.$active ? '500' : '400'};
   transition: all 0.2s;
-  border-left: 3px solid ${props => props.active ? '#3074db' : 'transparent'};
+  border-left: 3px solid ${props => props.$active ? '#3074db' : 'transparent'};
 
   &:hover {
     background: #f1f5f9;
@@ -144,9 +149,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/admin/login', { replace: true });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   const navItems = [
@@ -161,14 +170,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   return (
     <Layout>
       <Overlay isOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(false)} />
-      <Sidebar isOpen={isSidebarOpen}>
-        <Logo src="/logo.png" alt="Gennessence Water" />
+      <Sidebar $isOpen={isSidebarOpen}>
+        <Logo src={logo520} alt="Gennessence Water" />
         <Nav>
           {navItems.map(item => (
             <NavItem
               key={item.path}
               to={item.path}
-              active={location.pathname === item.path}
+              $active={location.pathname === item.path}
               onClick={() => setIsSidebarOpen(false)}
             >
               {item.label}

@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import logoLarge from '../assets/logo/logo-780x360.png';
 import AuthModal from './AuthModal';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const HeroContainer = styled.div`
   min-height: 100vh;
@@ -64,6 +66,17 @@ const CTA = styled.button`
 
 export default function Hero() {
   const [authOpen, setAuthOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGetHydrated = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      setAuthOpen(true);
+    }
+  };
+
   return (
     <HeroContainer>
       <HeroInner>
@@ -71,7 +84,7 @@ export default function Hero() {
         <Tagline>
           Sip, Smile, Repeat.
         </Tagline>
-        <CTA as="button" onClick={() => setAuthOpen(true)}>Get Hydrated</CTA>
+        <CTA as="button" onClick={handleGetHydrated}>Get Hydrated</CTA>
       </HeroInner>
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </HeroContainer>

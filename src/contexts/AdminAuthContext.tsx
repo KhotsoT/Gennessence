@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { auth, db } from '../firebase';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 interface AdminUser {
   id: string;
@@ -10,11 +12,10 @@ interface AdminUser {
 
 interface AdminAuthContextType {
   user: AdminUser | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -22,48 +23,61 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('adminToken'));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          // Check Firestore for admin role
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+          const userData = userDoc.data();
+          
+          if (userData?.role === 'admin') {
+            setUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email || '',
+              name: userData.name || '',
+              role: 'admin'
+            });
+            setError(null);
+          } else {
+            setUser(null);
+            setError('Access denied. Admin only.');
+            // Sign out if not admin
+            await signOut(auth);
+          }
+        } catch (err) {
+          setError('Failed to load user data');
+          setUser(null);
+          // Sign out on error
+          await signOut(auth);
+        }
+      } else {
+        setUser(null);
+        setError(null);
       }
+      setLoading(false);
+    });
 
-      try {
-        const response = await axios.get('/api/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(response.data);
-      } catch (err) {
-        setError('Failed to load user');
-        setToken(null);
-        localStorage.removeItem('adminToken');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUser();
-  }, [token]);
+    return () => unsubscribe();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post('/api/auth/login', { email, password });
-      const { token: newToken, user: newUser } = response.data;
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
-      if (newUser.role !== 'admin') {
+      // Check if user is admin
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      const userData = userDoc.data();
+      
+      if (userData?.role !== 'admin') {
+        await signOut(auth);
         throw new Error('Access denied. Admin only.');
       }
-
-      setToken(newToken);
-      setUser(newUser);
-      localStorage.setItem('adminToken', newToken);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
       throw err;
@@ -72,20 +86,27 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('adminToken');
+  const logout = async () => {
+    try {
+      setLoading(true);
+      await signOut(auth);
+      setUser(null);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Logout failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const value = {
     user,
-    token,
     loading,
     error,
     login,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: !!user && user.role === 'admin',
   };
 
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>;

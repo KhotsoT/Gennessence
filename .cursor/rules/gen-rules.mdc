@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ### Core Philosophy
 This is a clean, cross-platform app for Gennessence Water — health-focused, calm design, mobile-first. The project should always be built with maximum stability and clarity in mind.
@@ -32,4 +32,41 @@ This is a clean, cross-platform app for Gennessence Water — health-focused, ca
 - Water-themed palette and components
 - Reusable, responsive, clean layouts
 - Brand colors based on pH values (7.0 to 11.5)
+
+# Gennessence Water App — Project Scope & Memory-Bank
+
+## 1. Brand/Product Structure
+- **Main Page:** Our Waters (formerly Benefits)
+- **Categories:**
+  - Health Water (Pure Water, Gentle Boost, Optimal Balance, Detox Water)
+  - Beauty Water (Beauty Water)
+  - Utility Water (Shield, PureKlean)
+- **Product Data:**
+  - All product names, pH values, color codes, and benefit points are preserved and mapped to the correct category.
+- **Design:**
+  - Cards use luxury glassmorphism, gradients, premium fonts, and are responsive (1 per row on mobile, 2 per row for Health Water on desktop/tablet).
+
+## 2. Design System
+- **Typography:** Montserrat (via @fontsource), with clear hierarchy and luxury styling.
+- **Color Palette:** Brand blues (#3074db, #2581c4, #1b8ec2), pinks, oranges, and gradients for section headers/icons.
+- **Card Design:** Soft, floating, rounded, with pill-shaped pH badges, centered content, and a water-themed icon in the lower right.
+- **Responsiveness:** All layouts are mobile-first, with grid adjustments for different breakpoints.
+
+## 3. Navigation & Routing
+- **Nav Link:** "Our Waters" (not "Benefits"), links to `/our-waters` everywhere (desktop, mobile, and route).
+- **All references to `/benefits` have been removed.**
+
+## 4. Component/Codebase Decisions
+- **Component Reuse:** All cards and sections are modular and styled with styled-components for easy future updates.
+- **Icons:** FaTint, FaSpa, FaWater used for category icons, with gradients and responsive sizing.
+- **No Expo:** All code is cross-platform, Expo-free, and ready for web, Android, iOS, and desktop (via Capacitor/PWA).
+
+## 5. Admin/User Management (Current State)
+- **Admin Auth:** Admin authentication, protected routes, and context are in place.
+- **User Management:** User CRUD, role assignment, and admin dashboard are scaffolded.
+- **Next:** Assign admin role to yourself, test admin features, and refine user management UI/UX.
+
+---
+
+**This file is the persistent memory-bank for all major design, structure, and development decisions. Update this file with every major change to avoid rework and ensure continuity.**
 

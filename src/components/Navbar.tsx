@@ -151,23 +151,6 @@ const MobileMenuButton = styled(NavAnchor)`
   }
 `;
 
-const GlassIconButton = styled.button`
-  background: none;
-  border: none;
-  color: #3074db;
-  font-size: 1.35em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2em 0.5em 0.2em 0.2em;
-  margin-right: 0.5em;
-  cursor: pointer;
-  transition: color 0.2s;
-  &:hover {
-    color: #2056a8;
-  }
-`;
-
 const MobileMenuTextButton = styled.button`
   background: none;
   border: none;
@@ -182,16 +165,6 @@ const MobileMenuTextButton = styled.button`
     color: #2056a8;
     text-decoration: underline;
   }
-`;
-
-const MobileMenuRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  margin: 1.5rem auto 0 auto;
-  gap: 0.5em;
 `;
 
 const Hamburger = styled.button`
@@ -229,11 +202,6 @@ export default function Navbar() {
     }
   };
 
-  const handleGlassClick = () => {
-    setMobileOpen(false);
-    navigate('/dashboard');
-  };
-
   return (
     <NavBarContainer>
       <NavContent>
@@ -245,10 +213,7 @@ export default function Navbar() {
           ))}
           {user ? (
             <NavLink>
-              <span style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <NavAnchor as="button" style={{ background: 'none', color: '#3074db', border: 'none', fontSize: '1.08rem', cursor: 'pointer', padding: 0, transition: 'color 0.2s', lineHeight: 1 }} onClick={handleGlassClick} aria-label="Go to Daily Hydration Plan" onMouseOver={e => (e.currentTarget.style.color = '#2056a8')} onMouseOut={e => (e.currentTarget.style.color = '#3074db')}>🥛</NavAnchor>
-                <NavAnchor as="button" style={{ background: '#e0e7ef', color: '#2563eb', border: 'none', padding: '0.32rem 0.7rem', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 500 }} onClick={logout}>Logout</NavAnchor>
-              </span>
+              <NavAnchor as="button" style={{ background: '#e0e7ef', color: '#2563eb', border: 'none', padding: '0.32rem 0.7rem', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 500 }} onClick={logout}>Logout</NavAnchor>
             </NavLink>
           ) : (
             <NavLink>
@@ -274,10 +239,7 @@ export default function Navbar() {
         ))}
         {user ? (
           <li>
-            <MobileMenuRow>
-              <GlassIconButton onClick={handleGlassClick} aria-label="Go to Daily Hydration Plan">🥛</GlassIconButton>
-              <MobileMenuTextButton onClick={logout}>Logout</MobileMenuTextButton>
-            </MobileMenuRow>
+            <MobileMenuTextButton onClick={logout}>Logout</MobileMenuTextButton>
           </li>
         ) : (
           <li>
@@ -288,4 +250,4 @@ export default function Navbar() {
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </NavBarContainer>
   );
-} 
+}
