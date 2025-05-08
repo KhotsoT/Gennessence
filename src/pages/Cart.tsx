@@ -20,15 +20,18 @@ const Title = styled.h1`
 `;
 
 const CartBox = styled.div`
-  background: #fff;
+  background: rgba(255,255,255,0.85);
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px 0 rgba(0,60,255,0.08);
+  box-shadow: 0 8px 32px 0 rgba(48,116,219,0.18), 0 1.5px 8px 0 rgba(48,116,219,0.08);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(48,116,219,0.12);
   padding: 2.5rem 2rem 2rem 2rem;
   width: 100%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 const Empty = styled.div`
@@ -137,6 +140,50 @@ const Total = styled.div`
   width: 100%;
 `;
 
+const EmptyIcon = styled.div`
+  font-size: 3.5rem;
+  color: #b6d4fa;
+  margin-bottom: 1.2rem;
+`;
+
+const StickyCheckout = styled.div`
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  @media (min-width: 700px) {
+    position: static;
+    margin-top: 2rem;
+  }
+`;
+
+function CartItemRowMod({ item, updateQty, removeFromCart }: any) {
+  return (
+    <CartItemRow tabIndex={0} aria-label={`Cart item: ${item.name}, size ${item.size}, quantity ${item.qty}`}> 
+      <ItemImg src={item.image} alt={item.name} />
+      <ItemInfo>
+        <ItemName>{item.name}</ItemName>
+        <ItemSize>{item.size}</ItemSize>
+        <ItemPrice>R{item.price.toFixed(2)}</ItemPrice>
+      </ItemInfo>
+      <QtyControls>
+        <QtyBtn aria-label="Decrease quantity" onClick={() => updateQty(item.id, Math.max(1, item.qty - 1))} disabled={item.qty === 1} tabIndex={0}>
+          -
+        </QtyBtn>
+        <span style={{ minWidth: '1.5rem', textAlign: 'center', fontWeight: 700 }}>{item.qty}</span>
+        <QtyBtn aria-label="Increase quantity" onClick={() => updateQty(item.id, item.qty + 1)} tabIndex={0}>
+          +
+        </QtyBtn>
+      </QtyControls>
+      <Subtotal>R{(item.price * item.qty).toFixed(2)}</Subtotal>
+      <RemoveBtn aria-label={`Remove ${item.name}`} onClick={() => removeFromCart(item.id)} title="Remove" tabIndex={0}>×</RemoveBtn>
+    </CartItemRow>
+  );
+}
+
 export default function Cart() {
   const { items, updateQty, removeFromCart } = useCartStore();
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -147,28 +194,19 @@ export default function Cart() {
       <Title>Your Cart</Title>
       <CartBox>
         {items.length === 0 ? (
-          <Empty>Your cart is empty.<br />Start adding some refreshing water!</Empty>
+          <>
+            <EmptyIcon aria-hidden="true">💧</EmptyIcon>
+            <Empty>Your cart is empty.<br />Start adding some refreshing water!</Empty>
+          </>
         ) : (
           <>
             {items.map(item => (
-              <CartItemRow key={item.id}>
-                <ItemImg src={item.image} alt={item.name} />
-                <ItemInfo>
-                  <ItemName>{item.name}</ItemName>
-                  <ItemSize>{item.size}</ItemSize>
-                  <ItemPrice>R{item.price.toFixed(2)}</ItemPrice>
-                </ItemInfo>
-                <QtyControls>
-                  <QtyBtn onClick={() => updateQty(item.id, Math.max(1, item.qty - 1))}>-</QtyBtn>
-                  <span style={{ minWidth: '1.5rem', textAlign: 'center', fontWeight: 700 }}>{item.qty}</span>
-                  <QtyBtn onClick={() => updateQty(item.id, item.qty + 1)}>+</QtyBtn>
-                </QtyControls>
-                <Subtotal>R{(item.price * item.qty).toFixed(2)}</Subtotal>
-                <RemoveBtn onClick={() => removeFromCart(item.id)} title="Remove">×</RemoveBtn>
-              </CartItemRow>
+              <CartItemRowMod key={item.id} item={item} updateQty={updateQty} removeFromCart={removeFromCart} />
             ))}
             <Total>Total: R{total.toFixed(2)}</Total>
-            <CheckoutBtn disabled={items.length === 0} onClick={() => navigate('/checkout')}>Checkout</CheckoutBtn>
+            <StickyCheckout>
+              <CheckoutBtn disabled={items.length === 0} onClick={() => navigate('/checkout')} aria-label="Proceed to checkout">Checkout</CheckoutBtn>
+            </StickyCheckout>
           </>
         )}
       </CartBox>

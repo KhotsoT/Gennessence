@@ -286,7 +286,7 @@ export default function Navbar() {
           <li key={item.name}>
             {item.name === 'Cart' ? (
               <CartIconWrap>
-                <NavAnchor as={Link} to={item.href} aria-label="Cart">
+                <NavAnchor as={Link} to={item.href} aria-label="Cart" onClick={(e) => handleLinkClick(e, item.href)}>
                   <FaShoppingCart size={22} style={{ verticalAlign: 'middle' }} />
                 </NavAnchor>
                 {cartQty > 0 && <CartBadge>{cartQty}</CartBadge>}

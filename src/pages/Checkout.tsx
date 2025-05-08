@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useCartStore } from '../store/cartStore';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -122,6 +123,7 @@ const ErrorMsg = styled.div`
 
 export default function Checkout() {
   const { items, clearCart } = useCartStore();
+  const { user } = useAuth();
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
   const [form, setForm] = useState({ name: '', email: '', address: '', phone: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -147,6 +149,17 @@ export default function Checkout() {
       (window as any).google.maps.event.clearInstanceListeners(autocomplete);
     };
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({
+        ...f,
+        name: user.displayName || f.name,
+        email: user.email || f.email,
+        phone: user.phoneNumber || f.phone,
+      }));
+    }
+  }, [user]);
 
   const validate = () => {
     const errs: {[k:string]:string} = {};
