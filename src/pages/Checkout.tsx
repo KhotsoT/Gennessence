@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCartStore } from '../store/cartStore';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Page = styled.div`
@@ -99,6 +99,26 @@ const ThankYou = styled.div`
   text-align: center;
   margin: 2.5rem 0 1.5rem 0;
 `;
+const ErrorMsg = styled.div`
+  color: #d81e43;
+  background: rgba(255,0,60,0.07);
+  border-radius: 0.7rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.7rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.05rem;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  &::before {
+    content: '\26A0';
+    font-size: 1.2em;
+    color: #d81e43;
+    margin-right: 0.3em;
+  }
+`;
 
 export default function Checkout() {
   const { items, clearCart } = useCartStore();
@@ -106,25 +126,60 @@ export default function Checkout() {
   const [form, setForm] = useState({ name: '', email: '', address: '', phone: '' });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{[k:string]:string}>({});
   const navigate = useNavigate();
+  const addressInputRef = useRef<HTMLInputElement>(null);
+
+  // Google Places Autocomplete integration
+  useEffect(() => {
+    if (!(window as any).google || !(window as any).google.maps || !(window as any).google.maps.places) return;
+    const autocomplete = new (window as any).google.maps.places.Autocomplete(addressInputRef.current, {
+      types: ['address'],
+      componentRestrictions: { country: 'za' },
+      fields: ['formatted_address'],
+    });
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      setForm(f => ({ ...f, address: place.formatted_address || '' }));
+    });
+    return () => {
+      (window as any).google.maps.event.clearInstanceListeners(autocomplete);
+    };
+  }, []);
+
+  const validate = () => {
+    const errs: {[k:string]:string} = {};
+    if (!form.name) errs.name = 'Name required';
+    if (!form.email) errs.email = 'Email required';
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) errs.email = 'Invalid email';
+    if (!form.address) errs.address = 'Address required';
+    if (!form.phone) errs.phone = 'Phone required';
+    else if (!/^\+?\d{10,15}$/.test(form.phone.replace(/\D/g, ''))) errs.phone = 'Invalid phone';
+    return errs;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    setFieldErrors(errs => ({ ...errs, [e.target.name]: '' }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!form.name || !form.email || !form.address || !form.phone) {
-      setError('Please fill in all fields.');
-      return;
-    }
+    const errs = validate();
+    setFieldErrors(errs);
+    if (Object.keys(errs).length) return;
     if (items.length === 0) {
       setError('Your cart is empty.');
       return;
     }
-    setSubmitted(true);
-    clearCart();
+    setLoading(true);
+    setTimeout(() => {
+      setSubmitted(true);
+      clearCart();
+      setLoading(false);
+    }, 1200);
   };
 
   if (submitted) {
@@ -133,6 +188,15 @@ export default function Checkout() {
         <Title>Order Placed!</Title>
         <CheckoutBox>
           <ThankYou>Thank you for your order!<br />We'll be in touch soon.</ThankYou>
+          <CartSummary>
+            {items.map(item => (
+              <CartItem key={item.id}>
+                <span>{item.name} ({item.size}) x {item.qty}</span>
+                <span>R{(item.price * item.qty).toFixed(2)}</span>
+              </CartItem>
+            ))}
+            <Total>Total: R{total.toFixed(2)}</Total>
+          </CartSummary>
           <PlaceOrderBtn onClick={() => navigate('/')}>Back to Home</PlaceOrderBtn>
         </CheckoutBox>
       </Page>
@@ -143,15 +207,19 @@ export default function Checkout() {
     <Page>
       <Title>Checkout</Title>
       <CheckoutBox>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} autoComplete="off">
           <Label htmlFor="name">Full Name</Label>
-          <Input id="name" name="name" value={form.name} onChange={handleChange} required />
+          <Input id="name" name="name" value={form.name} onChange={handleChange} required aria-invalid={!!fieldErrors.name} aria-describedby="name-err" />
+          {fieldErrors.name && <ErrorMsg id="name-err">{fieldErrors.name}</ErrorMsg>}
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} required />
+          <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} required aria-invalid={!!fieldErrors.email} aria-describedby="email-err" />
+          {fieldErrors.email && <ErrorMsg id="email-err">{fieldErrors.email}</ErrorMsg>}
           <Label htmlFor="address">Shipping Address</Label>
-          <Input id="address" name="address" value={form.address} onChange={handleChange} required />
+          <Input ref={addressInputRef} id="address" name="address" value={form.address} onChange={handleChange} required aria-invalid={!!fieldErrors.address} aria-describedby="address-err" placeholder="Start typing your address..." />
+          {fieldErrors.address && <ErrorMsg id="address-err">{fieldErrors.address}</ErrorMsg>}
           <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" name="phone" value={form.phone} onChange={handleChange} required />
+          <Input id="phone" name="phone" value={form.phone} onChange={handleChange} required aria-invalid={!!fieldErrors.phone} aria-describedby="phone-err" placeholder="e.g. 0821234567" />
+          {fieldErrors.phone && <ErrorMsg id="phone-err">{fieldErrors.phone}</ErrorMsg>}
           <CartSummary>
             {items.map(item => (
               <CartItem key={item.id}>
@@ -161,8 +229,8 @@ export default function Checkout() {
             ))}
             <Total>Total: R{total.toFixed(2)}</Total>
           </CartSummary>
-          {error && <div style={{ color: '#d81e43', marginBottom: '0.7rem', textAlign: 'center' }}>{error}</div>}
-          <PlaceOrderBtn type="submit" disabled={items.length === 0}>Place Order</PlaceOrderBtn>
+          {error && <ErrorMsg>{error}</ErrorMsg>}
+          <PlaceOrderBtn type="submit" disabled={items.length === 0 || loading}>{loading ? 'Processing...' : 'Place Order'}</PlaceOrderBtn>
         </Form>
       </CheckoutBox>
     </Page>
