@@ -238,6 +238,11 @@ export default function Navbar() {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <NavBarContainer>
       <NavContent>
@@ -258,7 +263,7 @@ export default function Navbar() {
           ))}
           {user ? (
             <NavLink>
-              <NavAnchor as="button" style={{ background: '#e0e7ef', color: '#2563eb', border: 'none', padding: '0.32rem 0.7rem', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 500 }} onClick={logout}>Logout</NavAnchor>
+              <NavAnchor as="button" style={{ background: '#e0e7ef', color: '#2563eb', border: 'none', padding: '0.32rem 0.7rem', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.98rem', fontWeight: 500 }} onClick={handleLogout}>Logout</NavAnchor>
             </NavLink>
           ) : (
             <NavLink>
@@ -293,7 +298,7 @@ export default function Navbar() {
         ))}
         {user ? (
           <li>
-            <MobileMenuTextButton onClick={logout}>Logout</MobileMenuTextButton>
+            <MobileMenuTextButton onClick={handleLogout}>Logout</MobileMenuTextButton>
           </li>
         ) : (
           <li>

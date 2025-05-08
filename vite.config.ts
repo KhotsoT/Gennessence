@@ -16,17 +16,25 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('recharts')) return 'recharts';
-            if (id.includes('styled-components')) return 'styled-components';
-            if (id.includes('react-router-dom')) return 'react-router-dom';
-            if (id.includes('react-dom')) return 'react-dom';
-            if (id.includes('react')) return 'react';
-          }
-          if (id.includes('/src/pages/admin/')) return 'admin';
+        manualChunks: {
+          vendor: [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            'styled-components',
+            'zustand',
+            'axios',
+          ],
+          admin: [
+            './src/pages/admin/Dashboard.tsx',
+            './src/pages/admin/Products.tsx',
+            './src/pages/admin/Orders.tsx',
+            './src/pages/admin/Users.tsx',
+            './src/pages/admin/Analytics.tsx',
+          ],
         },
       },
     },
+    chunkSizeWarningLimit: 700,
   },
 })
