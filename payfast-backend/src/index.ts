@@ -7,6 +7,7 @@ import multer from 'multer';
 import { parse } from 'csv-parse/sync';
 import authRoutes from './routes/auth';
 import usersRoutes from './routes/users';
+import cartRoutes from './routes/cart';
 
 // Load environment variables
 dotenv.config();
@@ -19,12 +20,12 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/gennessence')
-  .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/cart', cartRoutes);
 
 // Multer setup for file uploads
 const upload = multer({ storage: multer.memoryStorage() });
@@ -70,8 +71,6 @@ app.post('/api/products/upload', upload.single('file'), (req: Request & { file?:
       skip_empty_lines: true,
       trim: true,
     });
-    // TODO: Save records to database in production
-    console.log('Parsed products:', records);
     res.json({ products: records });
   } catch (err) {
     res.status(400).json({ error: 'Invalid CSV file.' });
@@ -81,7 +80,6 @@ app.post('/api/products/upload', upload.single('file'), (req: Request & { file?:
 // Payfast notify handler (stub)
 app.post('/api/payfast/notify', (req: Request, res: Response) => {
   // In production: validate signature, source IP, update order/payment status
-  console.log('Payfast notify received:', req.body);
   res.status(200).send('OK');
 });
 

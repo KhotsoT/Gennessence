@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useCartStore } from '../store/cartStore';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -186,8 +188,27 @@ function CartItemRowMod({ item, updateQty, removeFromCart }: any) {
 
 export default function Cart() {
   const { items, updateQty, removeFromCart } = useCartStore();
+  const { user } = useAuth();
+  const [token, setToken] = useState<string | null>(null);
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+    if (user) {
+      user.getIdToken().then(t => { if (isMounted) setToken(t); });
+    } else {
+      setToken(null);
+    }
+    return () => { isMounted = false; };
+  }, [user]);
+
+  const handleUpdateQty = (id: string, qty: number) => {
+    updateQty(id, qty, token || undefined);
+  };
+  const handleRemoveFromCart = (id: string) => {
+    removeFromCart(id, token || undefined);
+  };
 
   return (
     <Page>
@@ -201,7 +222,7 @@ export default function Cart() {
         ) : (
           <>
             {items.map(item => (
-              <CartItemRowMod key={item.id} item={item} updateQty={updateQty} removeFromCart={removeFromCart} />
+              <CartItemRowMod key={item.id} item={item} updateQty={handleUpdateQty} removeFromCart={handleRemoveFromCart} />
             ))}
             <Total>Total: R{total.toFixed(2)}</Total>
             <StickyCheckout>

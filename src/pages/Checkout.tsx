@@ -20,15 +20,18 @@ const Title = styled.h1`
   text-align: center;
 `;
 const CheckoutBox = styled.div`
-  background: #fff;
+  background: rgba(255,255,255,0.85);
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px 0 rgba(0,60,255,0.08);
+  box-shadow: 0 8px 32px 0 rgba(48,116,219,0.18), 0 1.5px 8px 0 rgba(48,116,219,0.08);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(48,116,219,0.12);
   padding: 2.5rem 2rem 2rem 2rem;
   width: 100%;
   max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 const Form = styled.form`
   width: 100%;

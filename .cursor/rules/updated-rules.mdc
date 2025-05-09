@@ -1,0 +1,70 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+All projects should follow a cross-platform design philosophy.
+
+## 📱 Platform Targets
+
+Every app must be planned and built for:
+- ✅ Web
+- ✅ Android (Play Store)
+- ✅ iOS (App Store)
+- ✅ Optional: Desktop (Electron, PWA)
+
+Use frameworks and libraries that support multiplatform targets:
+- React Native (❌ Do not use Expo – use React Native CLI with Capacitor instead)
+- React or Next.js (with Vite preferred) for web
+- Tailwind CSS or styled-components for consistent UI styling
+- Capacitor for native app packaging
+
+## 🧩 Development Priorities
+
+Prioritize:
+- ✅ Responsive layouts
+- ✅ Device-agnostic design
+- ✅ Offline capabilities where appropriate
+- ✅ Deployment-ready build systems
+
+## 📦 Code Architecture
+
+All code should be:
+- Platform-agnostic by default
+- Easily modularized
+- Lightweight with scalable structure
+- Reusable across platforms
+
+Every time you generate a component, page, or utility:
+- ✅ Ensure it works on both web and mobile (React Native or PWA)
+- ✅ Use file naming that supports shared logic across platforms
+- ✅ Follow the app store readiness approach – no web-only solutions unless explicitly approved
+
+---
+
+## ⏳ Post-Core Development Roadmap: Empowerment Distribution System
+
+Once all planned primary features are completed, the app must expand to support Gennessence Water’s distributor empowerment strategy. This system should be designed as a cross-platform business opportunity module for micro-entrepreneurs.
+
+### 🎯 Key Features to Implement:
+
+- **Distributor Onboarding:** In-app registration for tiers (T1–T4)
+- **Stock Ordering System:** Real-time ordering and inventory tracking
+- **Earnings Dashboard:** Sales, margin tracking, and commission breakdowns
+- **Training Hub:** Courses on water knowledge, sales, branding, entrepreneurship
+- **Gamified Rewards:** Milestones, badges, territory leaderboards
+- **Referral Tools:** Distributor QR codes, links, sub-agent tracking
+- **Buy-Back Flow:** Interface for returning unsold stock (if seal intact)
+- **Regional Admin Panel:** For T3/T4 distributors to manage networks
+- **Equity Ladder Monitoring:** Tracks eligibility for shares or profit split
+
+### 📲 Requirements for Distribution Features:
+
+- ✅ Must follow all cross-platform rules
+- ✅ Offline fallback support for township/low-bandwidth areas
+- ✅ Secure account management and role-based access
+- ✅ Localized language/pricing support
+- ✅ Analytics integration (e.g. Firebase, PostHog)
+
+> Begin this feature set *only after* all initial hydration-focused and consumer-facing modules are live and stable.
+

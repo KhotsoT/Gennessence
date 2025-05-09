@@ -1,0 +1,9 @@
+# .env (or .env.local) for your Vite React + Capacitor project
+
+# The base URL for your backend API (update this to your actual backend address)
+VITE_API_BASE_URL=http://localhost:5000
+
+# If your backend is deployed, use the deployed URL, e.g.:
+# VITE_API_BASE_URL=https://your-backend-domain.com
+
+# (Add any other environment variables your project needs below) 

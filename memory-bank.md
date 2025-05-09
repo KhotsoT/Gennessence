@@ -1,21 +1,23 @@
-# Gennessence Water App — Project Scope & Memory-Bank
+# Gennessence Water App — Project Progress (as of now)
 
-## Outstanding Items & Current Focus (as of latest build)
+## ✅ Build & Platform Status
+- All build errors resolved (including chunking and Firebase issues)
+- Optimized chunking with Vite manualChunks (no warnings)
+- TypeScript and all dependencies in sync
+- Web and Android builds are both running and error-free
 
-### 1. Chunk Splitting & Performance
-- Manual chunking is now in place for major libraries and admin pages using Vite/Rollup.
-- Some large chunks remain, but initial load is improved and code splitting is optimal for most users.
-- Further chunk optimization can be revisited if needed, but not blocking for mobile testing.
+## ✅ Core Features
+- Logout redirect now always takes user to home (web & mobile)
+- Navigation, routing, and admin/user management are stable
 
-### 2. Outstanding UI/UX Issues (Mobile)
-- **Mobile menu spacing:** Hamburger/nav menu has inconsistent or uneven spacing on mobile.
-- **Product details page cut-off:** Product details content is being cut off or not fully visible on mobile devices.
-- **General mobile responsiveness:** Audit and fix any fixed widths, overflows, or layout issues across all main pages/components.
-
-### 3. Next Focus
-- Fix all mobile UI/UX issues for a flawless, production-grade experience on Android/iOS.
-- After mobile UI is perfect, resume work on admin functionality and advanced features.
+## ⏳ Next Focus: Checkout Flow Refinement
+- UI/UX audit for all checkout fields (consistency, alignment, mobile-first)
+- Robust Google Places autocomplete (with fallback/manual entry)
+- Clear validation, error, and loading states
+- Premium, branded confirmation/thank you screen
+- Modular, maintainable code for all form components
+- Seamless Payfast integration with user feedback
 
 ---
 
-**This section is up to date with all major outstanding and in-progress items.** 
+**Next up: Full checkout flow refinement and polish.** 
